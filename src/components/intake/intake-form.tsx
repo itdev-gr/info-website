@@ -62,7 +62,7 @@ export function IntakeForm({ token }: { token: string; clientId: string }) {
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="recommended_site">A website you like (for reference)</Label>
+          <Label htmlFor="recommended_site">A website you like (for reference) <span className="text-xs font-normal text-muted-foreground">— optional</span></Label>
           <Input id="recommended_site" type="url" placeholder="https://..." {...register('recommended_site')} />
           {errors.recommended_site && <p className="text-xs text-destructive">{String(errors.recommended_site.message)}</p>}
         </div>

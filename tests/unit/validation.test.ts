@@ -43,6 +43,15 @@ describe('intakeFormSchema', () => {
   it('rejects non-URL recommended_site', () => {
     expect(intakeFormSchema.safeParse({ ...base, recommended_site: 'not a url' }).success).toBe(false);
   });
+  it('accepts empty recommended_site (optional)', () => {
+    const parsed = intakeFormSchema.parse({ ...base, recommended_site: '' });
+    expect(parsed.recommended_site).toBe(null);
+  });
+  it('accepts missing recommended_site key', () => {
+    const { recommended_site: _drop, ...rest } = base; void _drop;
+    const parsed = intakeFormSchema.parse(rest);
+    expect(parsed.recommended_site).toBe(null);
+  });
   it('trims description', () => {
     const parsed = intakeFormSchema.parse({ ...base, description: '  hello  ' });
     expect(parsed.description).toBe('hello');

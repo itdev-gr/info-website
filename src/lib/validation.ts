@@ -13,7 +13,14 @@ const domainSuggestion = z.string().trim().min(1).max(253);
 export const intakeFormSchema = z
   .object({
     description: trimmedString(1, 5_000),
-    recommended_site: z.string().trim().url().max(500),
+    recommended_site: z
+      .string()
+      .trim()
+      .max(500)
+      .refine((v) => v === '' || /^https?:\/\/[^\s]+$/i.test(v), { message: 'Must be a valid http(s) URL' })
+      .transform((v) => (v === '' ? null : v))
+      .nullable()
+      .default(null),
     has_existing_domain: z.boolean(),
     existing_domain: z.string().trim().max(253).nullable().optional().transform((v) => v ?? null),
     domain_suggestions: z.array(domainSuggestion).max(3),
