@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/server';
 import { LogoutButton } from './logout-button';
 
@@ -8,11 +9,22 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b bg-card">
+      <header className="border-b" style={{ backgroundColor: 'var(--brand-dark)' }}>
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <Link href="/dashboard" className="font-semibold">Agency Intake</Link>
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <Image
+              src="/brand/itdev-logo-white.svg"
+              alt="IT DEV"
+              width={130}
+              height={27}
+              priority
+            />
+            <span className="hidden sm:inline text-sm text-white/70 border-l border-white/20 pl-3">
+              Client Intake
+            </span>
+          </Link>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">{user?.email}</span>
+            <span className="text-sm text-white/70">{user?.email}</span>
             <LogoutButton />
           </div>
         </div>

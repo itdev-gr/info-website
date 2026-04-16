@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Client Intake — Agency Dashboard',
-  description: 'Internal dashboard for client onboarding.',
+  title: 'IT DEV — Client Intake',
+  description: 'Client onboarding dashboard for IT DEV agency.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
