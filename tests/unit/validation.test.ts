@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { intakeFormSchema, clientNameSchema } from '@/lib/validation';
+import { intakeFormSchema, clientNameSchema, newClientSchema } from '@/lib/validation';
 
 describe('clientNameSchema', () => {
   it('accepts a normal name', () => {
@@ -14,6 +14,27 @@ describe('clientNameSchema', () => {
   });
   it('rejects >200 chars', () => {
     expect(clientNameSchema.safeParse('a'.repeat(201)).success).toBe(false);
+  });
+});
+
+describe('newClientSchema', () => {
+  it('accepts a valid payload', () => {
+    const r = newClientSchema.safeParse({ name: 'Acme', clickup_id: '86a7xy' });
+    expect(r.success).toBe(true);
+  });
+  it('rejects missing clickup_id', () => {
+    expect(newClientSchema.safeParse({ name: 'Acme' }).success).toBe(false);
+  });
+  it('rejects empty clickup_id', () => {
+    expect(newClientSchema.safeParse({ name: 'Acme', clickup_id: '   ' }).success).toBe(false);
+  });
+  it('rejects empty name', () => {
+    expect(newClientSchema.safeParse({ name: '', clickup_id: 'abc' }).success).toBe(false);
+  });
+  it('trims both fields', () => {
+    const r = newClientSchema.parse({ name: '  Acme  ', clickup_id: '  86a7  ' });
+    expect(r.name).toBe('Acme');
+    expect(r.clickup_id).toBe('86a7');
   });
 });
 

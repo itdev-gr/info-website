@@ -7,6 +7,7 @@ export interface Database {
         Row: {
           id: string;
           name: string;
+          clickup_id: string;
           status: 'invited' | 'submitted' | 'archived';
           created_at: string;
           updated_at: string;
@@ -16,6 +17,7 @@ export interface Database {
         Insert: {
           id?: string;
           name: string;
+          clickup_id?: string;
           status?: 'invited' | 'submitted' | 'archived';
           created_at?: string;
           updated_at?: string;
@@ -25,6 +27,7 @@ export interface Database {
         Update: {
           id?: string;
           name?: string;
+          clickup_id?: string;
           status?: 'invited' | 'submitted' | 'archived';
           created_at?: string;
           updated_at?: string;

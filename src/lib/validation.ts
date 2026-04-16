@@ -2,6 +2,12 @@ import { z } from 'zod';
 
 export const clientNameSchema = z.string().trim().min(1).max(200);
 
+export const newClientSchema = z.object({
+  name: clientNameSchema,
+  clickup_id: z.string().trim().min(1, 'ClickUp ID is required').max(100),
+});
+export type NewClientValues = z.infer<typeof newClientSchema>;
+
 const trimmedString = (min = 0, max?: number) => {
   let s = z.string().trim().min(min);
   if (max !== undefined) s = s.max(max);

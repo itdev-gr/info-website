@@ -34,7 +34,14 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-semibold">{client.name}</h1>
-          <div className="mt-1"><ClientStatusBadge status={client.status} /></div>
+          <div className="mt-1 flex items-center gap-3">
+            <ClientStatusBadge status={client.status} />
+            {client.clickup_id && (
+              <span className="text-xs text-muted-foreground">
+                ClickUp ID: <span className="font-mono">{client.clickup_id}</span>
+              </span>
+            )}
+          </div>
         </div>
         <DeleteClientButton clientId={client.id} clientName={client.name} />
       </div>

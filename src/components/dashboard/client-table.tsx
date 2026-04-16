@@ -14,6 +14,7 @@ export function ClientTable({ clients }: { clients: Client[] }) {
       <TableHeader>
         <TableRow>
           <TableHead>Name</TableHead>
+          <TableHead>ClickUp ID</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Created</TableHead>
           <TableHead>Submitted</TableHead>
@@ -25,6 +26,7 @@ export function ClientTable({ clients }: { clients: Client[] }) {
             <TableCell>
               <Link href={`/dashboard/clients/${c.id}`} className="font-medium hover:underline">{c.name}</Link>
             </TableCell>
+            <TableCell className="font-mono text-xs text-muted-foreground">{c.clickup_id || '—'}</TableCell>
             <TableCell><ClientStatusBadge status={c.status} /></TableCell>
             <TableCell className="text-muted-foreground">{new Date(c.created_at).toLocaleDateString()}</TableCell>
             <TableCell className="text-muted-foreground">

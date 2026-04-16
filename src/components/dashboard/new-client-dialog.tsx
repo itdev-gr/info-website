@@ -11,6 +11,7 @@ export function NewClientDialog() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
+  const [clickupId, setClickupId] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ intake_url: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -22,12 +23,20 @@ export function NewClientDialog() {
     const res = await fetch('/api/clients', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, clickup_id: clickupId }),
     });
     setLoading(false);
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      setError(body.error || 'Failed to create client');
+      if (body.error === 'duplicate_name') {
+        setError(`A client named "${body.existing_name ?? name}" already exists.`);
+      } else if (body.error === 'invalid_input') {
+        const fields = body.details ?? {};
+        const msgs = Object.entries(fields).flatMap(([k, v]) => (v as string[]).map((m) => `${k}: ${m}`));
+        setError(msgs.join(' · ') || 'Invalid input');
+      } else {
+        setError(body.error || 'Failed to create client');
+      }
       return;
     }
     const data = await res.json();
@@ -38,6 +47,7 @@ export function NewClientDialog() {
   function close() {
     setOpen(false);
     setName('');
+    setClickupId('');
     setResult(null);
     setError(null);
   }
@@ -66,12 +76,31 @@ export function NewClientDialog() {
           <form onSubmit={submit} className="space-y-4">
             <div className="space-y-1">
               <Label htmlFor="client-name">Client name</Label>
-              <Input id="client-name" value={name} onChange={(e) => setName(e.target.value)} required />
+              <Input
+                id="client-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                autoFocus
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="clickup-id">ClickUp ID</Label>
+              <Input
+                id="clickup-id"
+                value={clickupId}
+                onChange={(e) => setClickupId(e.target.value)}
+                placeholder="e.g. 86a7xy2bc"
+                required
+              />
+              <p className="text-xs text-muted-foreground">Task or list ID from ClickUp — links this client to the project there.</p>
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
             <DialogFooter>
               <Button variant="outline" type="button" onClick={close} disabled={loading}>Cancel</Button>
-              <Button type="submit" disabled={loading}>{loading ? 'Creating…' : 'Create'}</Button>
+              <Button type="submit" disabled={loading || !name.trim() || !clickupId.trim()}>
+                {loading ? 'Creating…' : 'Create'}
+              </Button>
             </DialogFooter>
           </form>
         )}
