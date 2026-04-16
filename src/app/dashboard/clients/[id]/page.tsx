@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { ClientStatusBadge } from '@/components/dashboard/client-status-badge';
 import { IntakeLinkBox } from '@/components/dashboard/intake-link-box';
 import { FileGallery } from '@/components/dashboard/file-gallery';
+import { originFromHeaders } from '@/lib/base-url';
 
 export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -18,7 +19,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
     .from('intake_links').select('token').eq('client_id', id).eq('revoked', false).is('used_at', null)
     .order('created_at', { ascending: false }).limit(1).maybeSingle();
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+  const appUrl = await originFromHeaders();
   const intakeUrl = activeLink ? `${appUrl}/intake/${activeLink.token}` : null;
 
   let logoUrl: string | null = null;

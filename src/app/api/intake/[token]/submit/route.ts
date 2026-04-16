@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { validateIntakeLink } from '@/lib/tokens';
 import { intakeFormSchema } from '@/lib/validation';
 import { sendSubmissionAlert } from '@/lib/email';
+import { originFromRequest } from '@/lib/base-url';
 
 export async function POST(request: Request, { params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
@@ -52,7 +53,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
   // Send notification (swallow errors — submission itself succeeded)
   if (client && teamEmails.length > 0) {
     try {
-      await sendSubmissionAlert({ to: teamEmails, clientName: client.name, clientId: link!.client_id });
+      await sendSubmissionAlert({ to: teamEmails, clientName: client.name, clientId: link!.client_id, appUrl: originFromRequest(request) });
     } catch (err) {
       console.error('submission email failed', err);
     }

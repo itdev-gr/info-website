@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { clientNameSchema } from '@/lib/validation';
 import { generateToken } from '@/lib/tokens';
+import { originFromRequest } from '@/lib/base-url';
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -29,6 +30,5 @@ export async function POST(request: Request) {
     .single();
   if (linkErr || !link) return NextResponse.json({ error: 'db_error', details: linkErr?.message }, { status: 500 });
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  return NextResponse.json({ client, intake_url: `${appUrl}/intake/${link.token}` });
+  return NextResponse.json({ client, intake_url: `${originFromRequest(request)}/intake/${link.token}` });
 }
