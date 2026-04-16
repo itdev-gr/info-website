@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { ClientStatusBadge } from '@/components/dashboard/client-status-badge';
 import { IntakeLinkBox } from '@/components/dashboard/intake-link-box';
 import { FileGallery } from '@/components/dashboard/file-gallery';
+import { DeleteClientButton } from '@/components/dashboard/delete-client-button';
 import { originFromHeaders } from '@/lib/base-url';
 
 export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -35,6 +36,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
           <h1 className="text-2xl font-semibold">{client.name}</h1>
           <div className="mt-1"><ClientStatusBadge status={client.status} /></div>
         </div>
+        <DeleteClientButton clientId={client.id} clientName={client.name} />
       </div>
 
       <IntakeLinkBox clientId={client.id} initialUrl={intakeUrl} />
