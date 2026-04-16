@@ -1,10 +1,20 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.RESEND_FROM_EMAIL || 'onboarding@example.com';
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
+function getResend(): Resend | null {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return null;
+  return new Resend(key);
+}
+
 export async function sendIntakeInvite(opts: { to: string; clientName: string; intakeUrl: string }) {
+  const resend = getResend();
+  if (!resend) {
+    console.warn('RESEND_API_KEY not set — skipping email');
+    return { data: null, error: null };
+  }
   return resend.emails.send({
     from: FROM,
     to: opts.to,
@@ -19,6 +29,11 @@ export async function sendIntakeInvite(opts: { to: string; clientName: string; i
 }
 
 export async function sendSubmissionAlert(opts: { to: string[]; clientName: string; clientId: string }) {
+  const resend = getResend();
+  if (!resend) {
+    console.warn('RESEND_API_KEY not set — skipping email');
+    return { data: null, error: null };
+  }
   const url = `${APP_URL}/dashboard/clients/${opts.clientId}`;
   return resend.emails.send({
     from: FROM,
