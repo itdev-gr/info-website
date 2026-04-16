@@ -16,6 +16,10 @@ const trimmedString = (min = 0, max?: number) => {
 
 const domainSuggestion = z.string().trim().min(1).max(253);
 
+// Very loose phone validation — international numbers vary too much to lock down.
+// Accepts digits, spaces, dashes, parentheses, dots, and a leading +.
+const phoneRegex = /^[+\d][\d\s().-]{5,30}$/;
+
 export const intakeFormSchema = z
   .object({
     description: trimmedString(1, 5_000),
@@ -24,6 +28,21 @@ export const intakeFormSchema = z
       .trim()
       .max(500)
       .refine((v) => v === '' || /^https?:\/\/[^\s]+$/i.test(v), { message: 'Must be a valid http(s) URL' })
+      .transform((v) => (v === '' ? null : v))
+      .nullable()
+      .default(null),
+    contact_email: z.string().trim().min(1, 'Email is required').email('Invalid email').max(320),
+    contact_phone: z
+      .string()
+      .trim()
+      .min(1, 'Phone is required')
+      .max(40)
+      .refine((v) => phoneRegex.test(v), { message: 'Invalid phone number' }),
+    contact_whatsapp: z
+      .string()
+      .trim()
+      .max(40)
+      .refine((v) => v === '' || phoneRegex.test(v), { message: 'Invalid WhatsApp number' })
       .transform((v) => (v === '' ? null : v))
       .nullable()
       .default(null),

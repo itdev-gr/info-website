@@ -42,6 +42,9 @@ describe('intakeFormSchema', () => {
   const base = {
     description: 'A description.',
     recommended_site: 'https://example.com',
+    contact_email: 'owner@acme.com',
+    contact_phone: '+30 210 000 0000',
+    contact_whatsapp: '',
     has_existing_domain: true,
     existing_domain: 'acme.com',
     domain_suggestions: [],
@@ -76,5 +79,19 @@ describe('intakeFormSchema', () => {
   it('trims description', () => {
     const parsed = intakeFormSchema.parse({ ...base, description: '  hello  ' });
     expect(parsed.description).toBe('hello');
+  });
+  it('requires contact_email', () => {
+    expect(intakeFormSchema.safeParse({ ...base, contact_email: '' }).success).toBe(false);
+    expect(intakeFormSchema.safeParse({ ...base, contact_email: 'not an email' }).success).toBe(false);
+  });
+  it('requires contact_phone', () => {
+    expect(intakeFormSchema.safeParse({ ...base, contact_phone: '' }).success).toBe(false);
+    expect(intakeFormSchema.safeParse({ ...base, contact_phone: 'abc' }).success).toBe(false);
+  });
+  it('contact_whatsapp is optional', () => {
+    const parsed = intakeFormSchema.parse({ ...base, contact_whatsapp: '' });
+    expect(parsed.contact_whatsapp).toBe(null);
+    expect(intakeFormSchema.safeParse({ ...base, contact_whatsapp: '+306900000000' }).success).toBe(true);
+    expect(intakeFormSchema.safeParse({ ...base, contact_whatsapp: 'abc' }).success).toBe(false);
   });
 });

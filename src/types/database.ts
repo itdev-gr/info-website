@@ -44,6 +44,9 @@ export interface Database {
           has_existing_domain: boolean;
           existing_domain: string | null;
           domain_suggestions: string[];
+          contact_email: string | null;
+          contact_phone: string | null;
+          contact_whatsapp: string | null;
           submitted_at: string | null;
         };
         Insert: {
@@ -54,6 +57,9 @@ export interface Database {
           has_existing_domain?: boolean;
           existing_domain?: string | null;
           domain_suggestions?: string[];
+          contact_email?: string | null;
+          contact_phone?: string | null;
+          contact_whatsapp?: string | null;
           submitted_at?: string | null;
         };
         Update: {
@@ -64,6 +70,9 @@ export interface Database {
           has_existing_domain?: boolean;
           existing_domain?: string | null;
           domain_suggestions?: string[];
+          contact_email?: string | null;
+          contact_phone?: string | null;
+          contact_whatsapp?: string | null;
           submitted_at?: string | null;
         };
       };

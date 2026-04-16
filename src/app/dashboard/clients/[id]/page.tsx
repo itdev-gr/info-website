@@ -50,6 +50,29 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
 
       {submission ? (
         <div className="grid gap-6 md:grid-cols-2">
+          <section className="md:col-span-2 space-y-2">
+            <h2 className="font-medium">Contact</h2>
+            <div className="grid gap-x-6 gap-y-1 text-sm sm:grid-cols-3">
+              <div>
+                <div className="text-xs text-muted-foreground">Email</div>
+                {submission.contact_email
+                  ? <a className="text-primary underline" href={`mailto:${submission.contact_email}`}>{submission.contact_email}</a>
+                  : <span className="text-muted-foreground">—</span>}
+              </div>
+              <div>
+                <div className="text-xs text-muted-foreground">Phone</div>
+                {submission.contact_phone
+                  ? <a className="text-primary underline" href={`tel:${submission.contact_phone.replace(/\s/g, '')}`}>{submission.contact_phone}</a>
+                  : <span className="text-muted-foreground">—</span>}
+              </div>
+              <div>
+                <div className="text-xs text-muted-foreground">WhatsApp</div>
+                {submission.contact_whatsapp
+                  ? <a className="text-primary underline" href={`https://wa.me/${submission.contact_whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer">{submission.contact_whatsapp}</a>
+                  : <span className="text-muted-foreground">—</span>}
+              </div>
+            </div>
+          </section>
           <section className="space-y-2">
             <h2 className="font-medium">Logo</h2>
             {logoUrl ? <Image src={logoUrl} alt="Logo" width={200} height={200} className="rounded border" /> : <p className="text-sm text-muted-foreground">No logo uploaded.</p>}

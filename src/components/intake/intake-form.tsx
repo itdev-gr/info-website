@@ -25,6 +25,9 @@ export function IntakeForm({ token }: { token: string; clientId: string }) {
     defaultValues: {
       description: '',
       recommended_site: '',
+      contact_email: '',
+      contact_phone: '',
+      contact_whatsapp: '',
       has_existing_domain: true,
       existing_domain: '',
       domain_suggestions: [],
@@ -60,6 +63,29 @@ export function IntakeForm({ token }: { token: string; clientId: string }) {
           <Textarea id="description" rows={5} {...register('description')} />
           {errors.description && <p className="text-xs text-destructive">{String(errors.description.message)}</p>}
         </div>
+
+        <fieldset className="space-y-3">
+          <legend className="font-medium">How we reach you</legend>
+          <div className="space-y-1">
+            <Label htmlFor="contact_email">Email</Label>
+            <Input id="contact_email" type="email" placeholder="you@company.com" {...register('contact_email')} />
+            {errors.contact_email && <p className="text-xs text-destructive">{String(errors.contact_email.message)}</p>}
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-1">
+              <Label htmlFor="contact_phone">Phone</Label>
+              <Input id="contact_phone" type="tel" placeholder="+30 210 000 0000" {...register('contact_phone')} />
+              {errors.contact_phone && <p className="text-xs text-destructive">{String(errors.contact_phone.message)}</p>}
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="contact_whatsapp">
+                WhatsApp <span className="text-xs font-normal text-muted-foreground">— optional</span>
+              </Label>
+              <Input id="contact_whatsapp" type="tel" placeholder="Leave blank if same as phone" {...register('contact_whatsapp')} />
+              {errors.contact_whatsapp && <p className="text-xs text-destructive">{String(errors.contact_whatsapp.message)}</p>}
+            </div>
+          </div>
+        </fieldset>
 
         <div className="space-y-1">
           <Label htmlFor="recommended_site">A website you like (for reference) <span className="text-xs font-normal text-muted-foreground">— optional</span></Label>
