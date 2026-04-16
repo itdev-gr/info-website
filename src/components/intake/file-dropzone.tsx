@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { guessMimeType } from '@/lib/media-kind';
 
 export interface UploadedFile {
   id: string;
@@ -25,12 +26,13 @@ export function FileDropzone({ token, files, onChange }: { token: string; files:
 
   async function uploadOne(file: File) {
     const tempId = crypto.randomUUID();
+    const mime = guessMimeType(file.name, file.type);
     setUploading((u) => [...u, { tempId, name: file.name, progress: 0 }]);
 
     const startRes = await fetch(`/api/intake/${token}/upload`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ kind: 'file', file_name: file.name, size: file.size, mime_type: file.type }),
+      body: JSON.stringify({ kind: 'file', file_name: file.name, size: file.size, mime_type: mime }),
     });
     if (!startRes.ok) {
       const body = await startRes.json().catch(() => ({}));
@@ -41,7 +43,7 @@ export function FileDropzone({ token, files, onChange }: { token: string; files:
 
     const xhr = new XMLHttpRequest();
     xhr.open('PUT', signed_url);
-    xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+    xhr.setRequestHeader('Content-Type', mime);
     xhr.upload.onprogress = (ev) => {
       if (ev.lengthComputable) {
         const pct = Math.round((ev.loaded / ev.total) * 100);
@@ -60,7 +62,7 @@ export function FileDropzone({ token, files, onChange }: { token: string; files:
     const metaRes = await fetch(`/api/intake/${token}/files`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ file_name: file.name, size: file.size, mime_type: file.type, storage_path }),
+      body: JSON.stringify({ file_name: file.name, size: file.size, mime_type: mime, storage_path }),
     });
     if (!metaRes.ok) {
       setUploading((u) => u.map((x) => x.tempId === tempId ? { ...x, error: 'Metadata save failed' } : x));
@@ -92,7 +94,7 @@ export function FileDropzone({ token, files, onChange }: { token: string; files:
         className={`rounded-lg border-2 border-dashed p-8 text-center cursor-pointer ${isDragActive ? 'bg-accent' : 'bg-muted/30'}`}
       >
         <input {...getInputProps()} />
-        <p className="text-sm">Drag & drop files or folders here, or click to select</p>
+        <p className="text-sm">Drag & drop images, videos, zips, or folders here, or click to select</p>
         <p className="text-xs text-muted-foreground mt-1">Max 500 MB per file, 5 GB total. Any file type.</p>
       </div>
 
