@@ -8,10 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { intakeFormSchema, type IntakeFormValues } from '@/lib/validation';
 import { LogoUpload } from './logo-upload';
 import { FileDropzone, type UploadedFile } from './file-dropzone';
 import { DomainSection } from './domain-section';
+import { WhatsappButtonSection } from './whatsapp-button-section';
 
 export function IntakeForm({ token }: { token: string; clientId: string }) {
   const router = useRouter();
@@ -28,6 +30,8 @@ export function IntakeForm({ token }: { token: string; clientId: string }) {
       contact_email: '',
       contact_phone: '',
       contact_whatsapp: '',
+      wants_whatsapp_button: false,
+      whatsapp_button_number: '',
       has_existing_domain: true,
       existing_domain: '',
       domain_suggestions: [],
@@ -97,6 +101,8 @@ export function IntakeForm({ token }: { token: string; clientId: string }) {
           <Label>Images, zips, or any other files</Label>
           <FileDropzone token={token} files={files} onChange={setFiles} />
         </div>
+
+        <WhatsappButtonSection />
 
         <DomainSection />
 

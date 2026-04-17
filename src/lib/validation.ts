@@ -46,11 +46,23 @@ export const intakeFormSchema = z
       .transform((v) => (v === '' ? null : v))
       .nullable()
       .default(null),
+    wants_whatsapp_button: z.boolean(),
+    whatsapp_button_number: z
+      .string()
+      .trim()
+      .max(40)
+      .refine((v) => v === '' || phoneRegex.test(v), { message: 'Invalid WhatsApp number' })
+      .transform((v) => (v === '' ? null : v))
+      .nullable()
+      .default(null),
     has_existing_domain: z.boolean(),
     existing_domain: z.string().trim().max(253).nullable().optional().transform((v) => v ?? null),
     domain_suggestions: z.array(domainSuggestion).max(3),
   })
   .superRefine((data, ctx) => {
+    if (data.wants_whatsapp_button && !data.whatsapp_button_number) {
+      ctx.addIssue({ code: 'custom', path: ['whatsapp_button_number'], message: 'WhatsApp number is required when the button is enabled' });
+    }
     if (data.has_existing_domain) {
       if (!data.existing_domain || data.existing_domain.length === 0) {
         ctx.addIssue({ code: 'custom', path: ['existing_domain'], message: 'Required when has_existing_domain is true' });

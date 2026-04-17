@@ -32,6 +32,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ tok
     contact_email: parsed.data.contact_email,
     contact_phone: parsed.data.contact_phone,
     contact_whatsapp: parsed.data.contact_whatsapp,
+    wants_whatsapp_button: parsed.data.wants_whatsapp_button,
+    whatsapp_button_number: parsed.data.whatsapp_button_number,
     has_existing_domain: parsed.data.has_existing_domain,
     existing_domain: parsed.data.existing_domain,
     domain_suggestions: parsed.data.domain_suggestions,

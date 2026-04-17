@@ -47,6 +47,8 @@ export interface Database {
           contact_email: string | null;
           contact_phone: string | null;
           contact_whatsapp: string | null;
+          wants_whatsapp_button: boolean;
+          whatsapp_button_number: string | null;
           submitted_at: string | null;
         };
         Insert: {
@@ -60,6 +62,8 @@ export interface Database {
           contact_email?: string | null;
           contact_phone?: string | null;
           contact_whatsapp?: string | null;
+          wants_whatsapp_button?: boolean;
+          whatsapp_button_number?: string | null;
           submitted_at?: string | null;
         };
         Update: {
@@ -73,6 +77,8 @@ export interface Database {
           contact_email?: string | null;
           contact_phone?: string | null;
           contact_whatsapp?: string | null;
+          wants_whatsapp_button?: boolean;
+          whatsapp_button_number?: string | null;
           submitted_at?: string | null;
         };
       };

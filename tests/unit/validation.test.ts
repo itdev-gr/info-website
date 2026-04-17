@@ -45,6 +45,8 @@ describe('intakeFormSchema', () => {
     contact_email: 'owner@acme.com',
     contact_phone: '+30 210 000 0000',
     contact_whatsapp: '',
+    wants_whatsapp_button: false,
+    whatsapp_button_number: '',
     has_existing_domain: true,
     existing_domain: 'acme.com',
     domain_suggestions: [],
@@ -93,5 +95,13 @@ describe('intakeFormSchema', () => {
     expect(parsed.contact_whatsapp).toBe(null);
     expect(intakeFormSchema.safeParse({ ...base, contact_whatsapp: '+306900000000' }).success).toBe(true);
     expect(intakeFormSchema.safeParse({ ...base, contact_whatsapp: 'abc' }).success).toBe(false);
+  });
+  it('whatsapp_button_number required when wants_whatsapp_button is true', () => {
+    expect(intakeFormSchema.safeParse({ ...base, wants_whatsapp_button: true, whatsapp_button_number: '' }).success).toBe(false);
+    expect(intakeFormSchema.safeParse({ ...base, wants_whatsapp_button: true, whatsapp_button_number: '+306900000000' }).success).toBe(true);
+  });
+  it('whatsapp_button_number not required when wants_whatsapp_button is false', () => {
+    const parsed = intakeFormSchema.parse({ ...base, wants_whatsapp_button: false, whatsapp_button_number: '' });
+    expect(parsed.whatsapp_button_number).toBe(null);
   });
 });

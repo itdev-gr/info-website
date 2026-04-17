@@ -73,6 +73,22 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
               </div>
             </div>
           </section>
+          {submission.wants_whatsapp_button && (
+            <section className="md:col-span-2 space-y-1">
+              <h2 className="font-medium">WhatsApp button</h2>
+              <p className="text-sm">
+                Client wants a WhatsApp chat button &mdash; number:{' '}
+                <a
+                  className="font-mono text-primary underline"
+                  href={`https://wa.me/${(submission.whatsapp_button_number ?? '').replace(/[^0-9]/g, '')}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {submission.whatsapp_button_number}
+                </a>
+              </p>
+            </section>
+          )}
           <section className="space-y-2">
             <h2 className="font-medium">Logo</h2>
             {logoUrl ? <Image src={logoUrl} alt="Logo" width={200} height={200} className="rounded border" /> : <p className="text-sm text-muted-foreground">No logo uploaded.</p>}
