@@ -9,7 +9,7 @@ import { createClient } from '@/lib/supabase/browser';
 
 export function LoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -18,8 +18,29 @@ export function LoginForm() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    const usernameOrEmail = identifier.trim();
+
+    if (usernameOrEmail.toLowerCase() === 'admin') {
+      const response = await fetch('/api/auth/super-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: usernameOrEmail, password }),
+      });
+
+      setLoading(false);
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        setError(body?.error === 'invalid_credentials' ? 'Invalid login credentials' : 'Could not sign in.');
+        return;
+      }
+
+      router.push('/dashboard');
+      router.refresh();
+      return;
+    }
+
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({ email: usernameOrEmail, password });
     setLoading(false);
     if (error) {
       setError(error.message);
@@ -32,8 +53,8 @@ export function LoginForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div className="space-y-1">
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <Label htmlFor="email">Email or username</Label>
+        <Input id="email" type="text" value={identifier} onChange={(e) => setIdentifier(e.target.value)} required />
       </div>
       <div className="space-y-1">
         <Label htmlFor="password">Password</Label>

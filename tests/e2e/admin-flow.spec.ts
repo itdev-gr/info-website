@@ -1,11 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-const ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL!;
-const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD!;
+const ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL ?? 'admin';
+const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD ?? 'poutsa';
 
 test('admin can log in and create a client', async ({ page }) => {
-  test.skip(!ADMIN_EMAIL || !ADMIN_PASSWORD, 'E2E_ADMIN_EMAIL and E2E_ADMIN_PASSWORD must be set');
-
   await page.goto('/login');
   await page.getByLabel('Email').fill(ADMIN_EMAIL);
   await page.getByLabel('Password').fill(ADMIN_PASSWORD);
