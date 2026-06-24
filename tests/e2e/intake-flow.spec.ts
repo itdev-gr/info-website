@@ -2,12 +2,10 @@ import { test, expect } from '@playwright/test';
 import path from 'node:path';
 import fs from 'node:fs';
 
-const ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL!;
-const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD!;
+const ADMIN_EMAIL = process.env.E2E_ADMIN_EMAIL ?? 'admin';
+const ADMIN_PASSWORD = process.env.E2E_ADMIN_PASSWORD ?? 'poutsa';
 
 test('client fills out intake and admin sees submission', async ({ browser }) => {
-  test.skip(!ADMIN_EMAIL || !ADMIN_PASSWORD, 'admin creds required');
-
   // --- Admin creates a client and grabs the intake URL ---
   const adminCtx = await browser.newContext();
   const adminPage = await adminCtx.newPage();
