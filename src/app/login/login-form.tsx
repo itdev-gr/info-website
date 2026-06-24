@@ -1,18 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { createClient } from '@/lib/supabase/browser';
 
 export function LoginForm() {
-  const router = useRouter();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  function goToDashboard() {
+    window.location.assign('/dashboard');
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -34,8 +36,7 @@ export function LoginForm() {
         return;
       }
 
-      router.push('/dashboard');
-      router.refresh();
+      goToDashboard();
       return;
     }
 
@@ -46,8 +47,7 @@ export function LoginForm() {
       setError(error.message);
       return;
     }
-    router.push('/dashboard');
-    router.refresh();
+    goToDashboard();
   }
 
   return (
